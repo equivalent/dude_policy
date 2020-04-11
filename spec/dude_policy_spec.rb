@@ -3,7 +3,9 @@ RSpec.describe DudePolicy do
     expect(DudePolicy::VERSION).not_to be nil
   end
 
-  it "does something useful" do
+  it "nil should be extended with NilDudePolicy" do
     expect(nil.dude).to be_kind_of DudePolicy::NilDudePolicy
+
+    expect(nil.dude.inspect).to match /<#DudePolicy#\d* on nil>/
   end
 end
