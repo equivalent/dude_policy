@@ -4,6 +4,6 @@ RSpec.describe DudePolicy do
   end
 
   it "does something useful" do
-    expect(false).to eq(true)
+    expect(nil.dude).to be_kind_of DudePolicy::NilDudePolicy
   end
 end
