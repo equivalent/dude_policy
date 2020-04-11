@@ -7,11 +7,11 @@ RSpec.describe DudePolicy::Dude do
   let(:different_user) { User.new(id: 666) }
 
   it { expect(current_user.dude).to be_kind_of(DudePolicy::Dude) }
-  it { expect(current_user.dude.inspect).to match /<#CurrentUserPolicy#\d* User#123>/ }
+  it { expect(current_user.dude.inspect).to match /<#DudePolicy::Dude#\d* User#123>/ }
 
 
   it { expect(current_account.dude).to be_kind_of(DudePolicy::Dude) }
-  it { expect(current_account.dude.inspect).to match /<#CurrentUserPolicy#\d* Account>/ }
+  it { expect(current_account.dude.inspect).to match /<#DudePolicy::Dude#\d* Account>/ }
 
   it do
     expect(current_user.dude.able_to_update_article(article)).to be true
