@@ -1,3 +1,5 @@
+require 'active_support/inflector'
+
 require 'singleton' # standard Ruby lib
 require "dude_policy/version"
 
@@ -7,6 +9,7 @@ require "dude_policy/nil_dude_policy"
 
 # current account stuff
 require "dude_policy/dude"
+require "dude_policy/base_policy"
 
 # extend app
 require "dude_policy/is_a_dude"

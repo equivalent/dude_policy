@@ -10,5 +10,9 @@ module DudePolicy
       id = "##{dude.id}" if dude.respond_to?(:id)
       "<#CurrentUserPolicy##{object_id} #{dude.class.name}#{id}>"
     end
+
+    def method_missing(name, resource)
+      resource.policy.send(name, dude: self)
+    end
   end
 end
