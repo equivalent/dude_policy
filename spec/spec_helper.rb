@@ -1,6 +1,10 @@
 require "bundler/setup"
 require "dude_policy"
 
+require "./spec/app/models/user"
+require "./spec/app/models/account"
+require "./spec/app/models/article"
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
