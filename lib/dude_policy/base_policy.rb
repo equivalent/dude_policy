@@ -7,7 +7,7 @@ module DudePolicy
     end
 
     def inspect
-      "<#{self.class.name}##{object_id} resource:#{resource.class_name}>"
+      "<#{self.class.name}##{object_id} resource:#{resource.class.name}>"
     end
   end
 end

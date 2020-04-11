@@ -1,5 +1,6 @@
 require "bundler/setup"
 require "dude_policy"
+require 'irb'
 
 require "./spec/app/models/user"
 require "./spec/app/models/account"

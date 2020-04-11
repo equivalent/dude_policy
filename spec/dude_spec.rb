@@ -4,6 +4,8 @@ RSpec.describe DudePolicy::Dude do
   let(:article) { Article.new } # Article is a model that has policy
   let(:current_account) { Account.new } # Account is a model that is a dude and has_policy as well
 
+  let(:different_user) { User.new(id: 666) }
+
   it { expect(current_user.dude).to be_kind_of(DudePolicy::Dude) }
   it { expect(current_user.dude.inspect).to match /<#CurrentUserPolicy#\d* User#123>/ }
 
@@ -12,6 +14,7 @@ RSpec.describe DudePolicy::Dude do
   it { expect(current_account.dude.inspect).to match /<#CurrentUserPolicy#\d* Account>/ }
 
   it do
-    expect(current_user.dude.able_to_update_article(article))
+    expect(current_user.dude.able_to_update_article(article)).to be true
+    expect(different_user.dude.able_to_update_article(article)).to be false
   end
 end

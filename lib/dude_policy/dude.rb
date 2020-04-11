@@ -12,7 +12,7 @@ module DudePolicy
     end
 
     def method_missing(name, resource)
-      resource.policy.send(name, dude: self)
+      resource.policy.send(name, dude: dude)
     end
   end
 end

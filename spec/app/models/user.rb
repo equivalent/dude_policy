@@ -1,7 +1,9 @@
 class User
   include DudePolicy::IsADude
 
-  def id
-    123
+  attr_reader :id
+
+  def initialize(id: 123)
+    @id = id
   end
 end
