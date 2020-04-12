@@ -1,8 +1,85 @@
-# DudePolicy
+# DudePolic
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/dude_policy`. To experiment with that code, run `bin/console` for an interactive prompt.
+This gem provides a way  how to do Ruby on Rails [Policy Objects](https://blog.eq8.eu/article/policy-object.html)
+from point of view of current_user/current_account (the **dude**)
 
-TODO: Delete this and the text above, and describe your gem
+![](https://triblive.com/wp-content/uploads/2019/01/673808_web1_gtr-liv-goldenglobes-121718.jpg)
+
+Here are some examples what we mean:
+
+
+```ruby
+# irb
+article = Article.find(123)
+review  = Review.find(123)
+current_user = User.find(432) # e.g. Devise on any authentication solution
+
+current_user.dude.able_to_edit_article?(article)
+# => true
+
+current_user.dude.able_to_add_article_review?(article)
+# => true
+
+current_user.dude.able_to_delete_review?(review)
+# => false
+```
+
+[RSpec](https://rspec.info/) examples:
+
+```ruby
+# spec/any_file_spec.rb
+RSpec.describe 'short demo' do
+  let(:author_user)  { User.create }
+  let(:article) { Article.create(author: author_user) }
+  let(:different_user)  { User.create }
+
+  # you write tests like this:
+  it { expect(author_user.ble_to_edit_article?(article)).to be_truthy }
+
+  # or you can take advantage of native `be_` RSpec matcher
+
+  it { expect(author_user).to be_able_to_edit_article(article) }
+  it { expect(different_user).not_to be_able_to_edit_article(article) }
+
+  it { expect(author_user).not_to be_able_to_add_article_review(article) }
+  it { expect(different_user).to be_able_to_add_article_review(article) }
+
+  it { expect(author_user).not_to be_able_to_delete_review(article) }
+  it { expect(different_user).to be_able_to_add_article_review(article) }
+end
+```
+
+Policy objects:
+
+```
+# app/policy/article_policy.rb
+class ArticlePolicy < DudePolicy::BasePolicy
+  def able_to_update_article?(dude:)
+    return true if article.author == dude
+    false
+  end
+
+  def able_to_add_article_review?(dude:)
+    return true if article.author != dude
+    false
+  end
+
+  private
+
+  def article
+    resource # delegation defined in DudePolicy::BasePolicy
+  end
+end
+```
+
+Full example in example app
+
+### Gem is responsible for Authorization
+
+Gem will provide a way how to do `Authorization` (whan give user can/cannot do)
+
+For `Authentication` (is User logged in ?) you will need different
+solution / gem (e.g. [Devise](https://github.com/heartcombo/devise), custom login solution, ...)
 
 ## Installation
 
