@@ -215,8 +215,8 @@ end
 
 You should be writing tests from perspective of current_user / current_account (the dude) and what roles they play.
 
-If you have 2 roles (admin/regular user) test all policiese for every
-role. If you have 8 roles (admin/moderator/client-manager/external-employee/noob/...) test every method from their perspective.
+If you have 2 roles (admin/regular user) test all policy methods for both
+roles. If you have 8 roles (admin/moderator/client-manager/external-employee/noob/...) test all policy methods from all eight perspectives.
 
 ```ruby
 # spec/policy/article_policy_spec.rb
@@ -266,7 +266,7 @@ When it comes to policy tests this can lead to huge security disasters ([full ex
 ##### request test
 
 Now that we tested policy for every possible role of a user we can stub
-the policy. We want to do in on same interface as we tested our policies
+the policy. We want to do it on the same interface level as we tested our policies
 that means `allow(current_user.dude).to receive(:able_to_update_article?).and_return(true)`
 
 > note: simmilar approach we would apply if you write controller RSpec test
@@ -359,8 +359,8 @@ view "what current_user can/cannot do" you solve multiple problems.
 
 #### Naming policy methods
 
-Your policy objects are just simple Ruby objects so nothing is restrict
-you from naming your methods in in anything you want.
+Your policy objects are just simple Ruby objects so there is no
+restriction to name your methods in in anything you want.
 
 From experience I highly advise you to name the policy methods as
 `able_to_` + `action` + `resource_name`
@@ -373,7 +373,7 @@ class ProductPolicy < DudePolicy::BasePolicy
     #...
   end
 
-  def able_to_add_review_comment(dude:)
+  def able_to_add_product_review_comment(dude:)
     #...
   end
 end
@@ -401,7 +401,7 @@ That's why gem implements [Null Object Pattern](https://avdi.codes/null-objects-
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/equivalent/dude_policy This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/dude_policy/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/equivalent/dude_policy This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/equivalent/dude_policy/blob/master/CODE_OF_CONDUCT.md).
 
 
 ## License
