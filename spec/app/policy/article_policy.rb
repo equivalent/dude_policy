@@ -3,5 +3,4 @@ class ArticlePolicy < DudePolicy::BasePolicy
     return true if dude.id == 123
     false
   end
-
 end

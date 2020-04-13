@@ -5,11 +5,11 @@ from point of view of current_user/current_account (the **dude**)
 
 ![](https://triblive.com/wp-content/uploads/2019/01/673808_web1_gtr-liv-goldenglobes-121718.jpg)
 
-Here are some examples what we mean:
+Here are some examples what I mean:
 
 
 ```ruby
-# irb
+# rails console
 article = Article.find(123)
 review  = Review.find(123)
 current_user = User.find(432) # e.g. Devise on any authentication solution
@@ -69,7 +69,7 @@ class ArticlePolicy < DudePolicy::BasePolicy
 end
 ```
 
-Full example in example app
+> For more examples pls check the [example app](https://github.com/equivalent/dude_policy_example1)
 
 ## Installation
 
@@ -89,12 +89,100 @@ Or install it yourself as:
 
 ## Usage
 
-### Gem is responsible for Authorization
+Gem is responsible for **Authorization** (what a logged in user can/cannot do)
+For **Authentication** (is User logged in ?) you will need a different solution / gem (e.g. [Devise](https://github.com/heartcombo/devise), custom login solution, ...)
 
-Gem will provide a way how to do `Authorization` (whan logged in user can/cannot do)
+Once you have your Authentication solution implemeted and `dude_policy`
+gem installed create `app/policy` a directory in your Ruby on Rails app
 
-For `Authentication` (is User logged in ?) you will need a different solution / gem (e.g. [Devise](https://github.com/heartcombo/devise), custom login solution, ...)
+> Since Rails 4 files in `app/anything` directories are autoloaded. So no additional magic is needed
 
+And create your policy file:
+
+
+```ruby
+# app/policy/article_policy
+class ArticlePolicy < DudePolicy::BasePolicy
+  def able_to_update_article?(dude:)
+    return true if dude.admin?
+    return true if dude == resource.author
+    false
+  end
+end
+```
+
+> Policy should be name as the model suffixed with word "Policy". So if
+> you have `ConstructiveComment` model your policy should be named `ConstructiveCommentPolicy` located in `app/policy/constructive_comment_policy.rb`
+
+
+You also need to tell your models what role they play
+
+```ruby
+class Article < ApplicationRecord
+  include DudePolicy::HasPolicy
+
+  # ...
+end
+```
+
+
+```ruby
+class User < ApplicationRecord
+  include DudePolicy::IsADude
+
+  # ...
+end
+```
+
+This way you will be able to call:
+
+```ruby
+user = User.find(123)
+user.dude.able_to_update_article?(@article)
+```
+
+> note 1: same model can include both `DudePolicy::IsADude` and `DudePolicy::IsADude`
+> note 2: please be sure to check the "Philosophy" section of this README to fully understand the flow
+
+This way you will be implement it in your application:
+
+#### protect views
+
+```erb
+<td><%= link_to 'Edit', edit_article_path(article) if current_user.dude.able_to_update_article?(article) %></td>
+```
+
+#### protect controllers
+
+```ruby
+# app/controllers/articles_controller.rb
+class ArticlesController < ApplicationController
+  # ...
+
+  def update
+    @article = Article.find_by(params[:id])
+    raise(DudePolicy::NotAuthorized) unless current_user.dude.able_to_update_article?(@article)
+
+    if @article.update(article_params)
+      redirect_to @article, notice: 'Article was successfully updated.'
+    else
+      render :edit
+    end
+  end
+end
+```
+
+#### protect business logic
+
+There are cases when you want to protect your business logic that is
+beyond MVC level. For example:
+
+
+@todo
+
+#### More examples
+
+> For more examples pls check the [example app](https://github.com/equivalent/dude_policy_example1)
 
 
 ## Contributing
