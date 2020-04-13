@@ -343,6 +343,62 @@ end
 > For more examples pls check the [example app](https://github.com/equivalent/dude_policy_example1)
 
 
+## Philospophy
+
+I've spent many years and tone of time playing around with different Authorization
+solutions and philosophies. All boils down to fact that [Policy Objects](https://blog.eq8.eu/article/policy-object.html) are the best you can implement.
+
+Problem is that though there are  decent policy object solutions usually
+they are not specific enough on implementation strategy  and teams/teammates still create a
+mess.
+
+But by taking a stand that all policy implementation will be from point of
+view "what current_user can/cannot do" you solve multiple problems.
+
+@todo - I'll add more details soon
+
+#### Naming policy methods
+
+Your policy objects are just simple Ruby objects so nothing is restrict
+you from naming your methods in in anything you want.
+
+From experience I highly advise you to name the policy methods as
+`able_to_` + `action` + `resource_name`
+
+example
+
+```ruby
+class ProductPolicy < DudePolicy::BasePolicy
+  def able_to_delete_product(dude:)
+    #...
+  end
+
+  def able_to_add_review_comment(dude:)
+    #...
+  end
+end
+
+class ReviewCommentPolicy < DudePolicy::BasePolicy
+  
+  def able_to_delete_review_comment(dude:)
+    #...
+  end
+end
+```
+#### Actions from point of parent model
+
+@ todo ... I'll add more here soon
+
+#### Nil overide
+
+once you install gem you may notice that you are able to do
+`nil.dude.can_do_anything? => false` this is a feature not a bug.
+
+Sometimes your application need to deal with `nil` as current_user and
+you don't want to have conditions `if current_user` all over the place.
+That's why gem implements [Null Object Pattern](https://avdi.codes/null-objects-and-falsiness/) on `nil.dude` method that returns `false` all the time
+
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/equivalent/dude_policy This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/dude_policy/blob/master/CODE_OF_CONDUCT.md).
