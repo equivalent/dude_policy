@@ -259,6 +259,9 @@ RSpec.describe ArticlePolicy do
 end
 ```
 
+> note the be_*****() matcher is built in RSpec (no special magic in this gem). It's up to you if you prefere `expect(current_user.dude).to be_able_to_update_article(article)` or
+> `expect(current_user.dude.able_to_update_article?(article)).to be_truthy`. Both are valid from point of native RSpec.
+
 
 Do yourself a favor and **don't write low level Unit Tests** like `expect(ArticlePolicy.new(article)).to be_able_to_update_article(dude: current_user)` !
 When it comes to policy tests this can lead to huge security disasters ([full explanation](https://blog.eq8.eu/assets/2019/unit-test.jpg))
@@ -353,9 +356,54 @@ they are not specific enough on implementation strategy  and teams/teammates sti
 mess.
 
 But by taking a stand that all policy implementation will be from point of
-view "what current_user can/cannot do" you solve multiple problems.
+view "what current_user can/cannot do" you solve multiple problems:
 
-@todo - I'll add more details soon
+* unified way how to write tests and code of policies - less chaose
+  within the team
+* stub current_account in tests is easy - In custom login solutions you may find it
+  difficult to stub underlying resouces in request/controller tests. By writing everything from user/account perspective
+  your stubs will be more effective with less maintenance headache 
+* performance - you don't load same objects as they are memoized on `model.policy` level (check source code)
+
+#### How it works
+
+Core of the gem is the delegator that flips dependencies (e.g. `user.dude`)
+
+So you
+define `ArticlePolicy` that works with `article` and you pass `dude` as
+a keyword argument:
+
+```
+class ArticlePolicy < DudePolicy::BasePolicy
+  def able_to_do_something_on_article?(dude:)
+    #...
+    # `dude' represent the user
+    #...
+  end
+end
+```
+
+...by using `include PolicyDude::HasPolicy` your model have access to
+this policy via method `article.policy`
+
+
+The model responsible for representing current user (`User`) is able to
+access the "flip dependency delegator" by using `include PolicyDude::IsADude` (e.g `user.dude`)
+
+This allow us to call method of the argumet resource policy:
+
+```
+user.dude.able_to_do_something_on_article?(article)        ->    article.policy.able_to_do_something_on_article(dude: user)
+user.dude.able_to_do_something_on_somethig_else?(product)  ->    product.policy.able_to_do_something_on_somethig_else(dude: user)
+```
+
+So in theory you could access the policy from resource point of view
+`article.policy._____(dude: user)`  but **don't do this** as the philosophy is **you should write your code from perspective of current_user**
+( `user.dude.____(article)` )
+
+
+> `model.policy` is exposed mainly for debugging level & performance (model level memoization)
+
 
 #### Naming policy methods
 
@@ -385,9 +433,11 @@ class ReviewCommentPolicy < DudePolicy::BasePolicy
   end
 end
 ```
-#### Actions from point of parent model
 
-@ todo ... I'll add more here soon
+this way you will be able to take advantage of built in RSpec feature
+and write tests like
+
+`it { expect(current_account.dude).to be_able_to_delete_review_comment(review_comment) }`
 
 #### Nil overide
 
