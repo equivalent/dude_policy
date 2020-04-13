@@ -205,7 +205,7 @@ end
 #### RSpec  testing
 
 
-**policy test**
+##### policy test
 
 You should be writing tests from perspective of current_user / current_account (the dude) and what roles they play.
 
@@ -257,11 +257,79 @@ end
 Do yourself a favor and **don't write low level Unit Tests** like `expect(ArticlePolicy.new(article)).to be_able_to_update_article(dude: current_user)` !
 When it comes to policy tests this can lead to huge security disasters ([full explanation](https://blog.eq8.eu/assets/2019/unit-test.jpg))
 
-**request test**
+##### request test
 
-you 
+Now that we tested policy for every possible role of a user we can stub
+the policy. We want to do in on same interface as we tested our policies
+that means `allow(current_user.dude).to receive(:able_to_update_article?).and_return(true)`
 
-> simmilar would apply if you write controller RSpec test
+> note: simmilar approach we would apply if you write controller RSpec test
+
+
+```ruby
+require 'rails_helper'
+RSpec.describe "Articles", type: :request do
+  let(:article) { create :article }
+
+  describe "put /articles/xxxx" do
+    def trigger_update
+      if current_user
+        # devise login
+        sign_in current_user
+
+        # policies are tested with `spec/policy/article_spec.rb so we can stub
+        allow(current_user.dude)
+          .to receive(:able_to_update_article?)
+          .with(article)
+          .and_return(authorized)
+      end
+
+      put article_path(article), params: {format: :html, article: { title: 'cat' }}
+      article.reload
+    end
+
+    context 'when not authenticated' do
+      let(:current_user) { nil }
+
+      it { expect { trigger_update }.not_to change { article.title } }
+      it do
+        trigger_update
+        expect(response.status).to eq 302 # redirect by update
+        follow_redirect!
+        expect(response.body).to include('You need to sign in or sign up before continuing.')
+      end
+    end
+
+    context 'when authenticated' do
+      let(:current_user) { create :user }
+
+      context 'when not authorized' do
+        let(:authorized) { false }
+
+        it { expect { trigger_update }.not_to change { article.title } }
+        it do
+          trigger_update
+          expect(response.status).to eq 302 # redirect to root_path by `authenticate!` method is ApplicationController
+          follow_redirect!
+          expect(response.body).to include('Sorry current user is not authorized to perform this action')
+        end
+      end
+
+      context 'when authorized' do
+        let(:authorized) { true }
+
+        it { expect { trigger_update }.to change { article.title }.from('interesting article').to('cat') }
+        it do
+          trigger_update
+          expect(response.status).to eq 302
+          follow_redirect!
+          expect(response.body).to include('Article was successfully updated.')
+        end
+      end
+    end
+  end
+end
+```
 
 
 #### More examples
