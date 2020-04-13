@@ -73,6 +73,8 @@ end
 
 ## Installation
 
+[![Build Status](https://travis-ci.org/equivalent/dude_policy.svg?branch=master)](https://travis-ci.org/equivalent/dude_policy)
+
 Add this line to your application's Gemfile:
 
 ```ruby
