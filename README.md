@@ -411,7 +411,7 @@ Your policy objects are just simple Ruby objects so there is no
 restriction to name your methods in in anything you want.
 
 From experience I highly advise you to name the policy methods as
-`able_to_` + `action` + `resource_name`
+`able_to_` + `action` + `resources names`
 
 example
 
@@ -448,6 +448,15 @@ Sometimes your application need to deal with `nil` as current_user and
 you don't want to have conditions `if current_user` all over the place.
 That's why gem implements [Null Object Pattern](https://avdi.codes/null-objects-and-falsiness/) on `nil.dude` method that returns `false` all the time
 
+#### Implementation outside Rails
+
+the gem/lib is really tiny. Only dependancy is Rails itself. If you want
+to be vanilla Rails (no external gems) or implement this in other Ruby frameworks (e.g.
+Sinatra) feel free to copy individual files from the `lib` directly
+
+The whole gem is just  [delegator](https://github.com/equivalent/dude_policy/blob/master/lib/dude_policy/dude.rb), [nil extensions](https://github.com/equivalent/dude_policy/blob/master/lib/dude_policy/nil_extension.rb), memoized model methods [1](https://github.com/equivalent/dude_policy/blob/master/lib/dude_policy/has_policy.rb) [2](https://github.com/equivalent/dude_policy/blob/master/lib/dude_policy/is_a_dude.rb) and your [Policy Objects](https://blog.eq8.eu/article/policy-object.html). It's not a rocket science.
+
+**The important part is the philosophy not the gem !**
 
 ## Contributing
 
