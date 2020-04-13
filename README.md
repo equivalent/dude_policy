@@ -153,7 +153,7 @@ This way you will be implement it in your application:
 #### protect views
 
 ```erb
-<td><%= link_to 'Edit', edit_article_path(article) if current_user.dude.able_to_update_article?(article) %></td>
+<%= link_to 'Edit', edit_article_path(@article) if current_user.dude.able_to_update_article?(@article) %>
 ```
 
 #### protect controllers
@@ -175,6 +175,10 @@ class ArticlesController < ApplicationController
   end
 end
 ```
+
+> gem provides error class `require 'DudePolicy::NotAuthorized' so you
+> can implement> [rescue_from](https://apidock.com/rails/ActiveSupport/Rescuable/ClassMethods/rescue_from) logic around not authenticated
+> scenarios. If you have no idea why I'm talking about pls check [example application code](https://github.com/equivalent/dude_policy_example1/blob/master/app/controllers/application_controller.rb)
 
 #### protect business logic
 
