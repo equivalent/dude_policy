@@ -146,7 +146,7 @@ user.dude.able_to_update_article?(@article)
 
 > Note: same model can include both `DudePolicy::IsADude` and `DudePolicy::IsADude` but don't have to.
 
-> Note: please be sure to check the "Philosophy" section of this README to fully understand the flow
+> Note: please be sure to check the [Philosophy](https://github.com/equivalent/dude_policy#philospophy) section of this README to fully understand the flow
 
 This way you will be implement it in your application:
 
@@ -343,7 +343,7 @@ end
 > For more examples pls check the [example app](https://github.com/equivalent/dude_policy_example1)
 
 
-## Philospophy
+## Philosophy
 
 I've spent many years and tone of time playing around with different Authorization
 solutions and philosophies. All boils down to fact that [Policy Objects](https://blog.eq8.eu/article/policy-object.html) are the best you can implement.
