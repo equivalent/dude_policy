@@ -176,7 +176,7 @@ class ArticlesController < ApplicationController
 end
 ```
 
-> gem provides error class `require 'DudePolicy::NotAuthorized' so you
+> gem provides error class `DudePolicy::NotAuthorized` so you
 > can implement> [rescue_from](https://apidock.com/rails/ActiveSupport/Rescuable/ClassMethods/rescue_from) logic around not authenticated
 > scenarios. If you have no idea why I'm talking about pls check [example application code](https://github.com/equivalent/dude_policy_example1/blob/master/app/controllers/application_controller.rb)
 
