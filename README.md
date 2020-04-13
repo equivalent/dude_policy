@@ -93,9 +93,12 @@ Gem is responsible for **Authorization** (what a logged in user can/cannot do)
 For **Authentication** (is User logged in ?) you will need a different solution / gem (e.g. [Devise](https://github.com/heartcombo/devise), custom login solution, ...)
 
 Once you have your Authentication solution implemeted and `dude_policy`
-gem installed create `app/policy` a directory in your Ruby on Rails app
+gem installed create a directory `app/policy`  in your Ruby on Rails
+app.
 
-And create your policy file:
+> Note: Since Rails version 4 files in `app/anything` directories are autoloaded. So no additional magic is needed
+
+There create your policy file:
 
 
 ```ruby
@@ -109,7 +112,6 @@ class ArticlePolicy < DudePolicy::BasePolicy
 end
 ```
 
-> Note: Since Rails version 4 files in `app/anything` directories are autoloaded. So no additional magic is needed
 
 > Note: Policy should be name as the model suffixed with word "Policy". So if
 > you have `ConstructiveComment` model your policy should be named `ConstructiveCommentPolicy` located in `app/policy/constructive_comment_policy.rb`
@@ -119,7 +121,7 @@ You also need to tell your models what role they play
 
 ```ruby
 class Article < ApplicationRecord
-  include DudePolicy::HasPolicy
+  include DudePolicy::HasPolicy  # will add a method `article.policy`
 
   # ...
 end
@@ -128,8 +130,8 @@ end
 
 ```ruby
 class User < ApplicationRecord
-  include DudePolicy::IsADude
-  include DudePolicy::HasPolicy
+  include DudePolicy::IsADude   # will add a method `user.dude`
+  include DudePolicy::HasPolicy # will add a method `user.policy`
 
   # ...
 end
