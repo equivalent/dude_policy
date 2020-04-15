@@ -359,7 +359,7 @@ mess.
 
 So here are some core principles and their benefits:
 
-#### access policies from model interface methods
+#### Access policies from model interface methods
 
 By accessing policy from `current_account.dude.able_to_do_something?(resource)` you'll
 overcome multiple challenges:
@@ -369,7 +369,7 @@ overcome multiple challenges:
 * unified way how to write code and implementation of policies
 * performance - you don't load same objects as they are memoized on `model.policy` level (check source code)
 
-#### stub policy in tests from perspective of current user  (`current_account.dude`)
+#### Stub policy in tests from perspective of current user  (`current_account.dude`)
 
 This may not be an issue if you are using general login solution gems
 like Devise. But in custom login solutions you may find it difficult to stub underlying resouces in request/controller tests.
@@ -377,7 +377,7 @@ like Devise. But in custom login solutions you may find it difficult to stub und
 By writing everything from user/account perspective `allow(current_account.dude).to receive(...)` your stubs will have less maintenance headache
 
 
-#### Naming policy methods
+#### Unified naming of policy methods
 
 Your policy objects are just simple Ruby objects so there is no
 restriction to name your methods in in anything you want.
@@ -418,9 +418,9 @@ resource/controller test on the same interface.
 
 > Avoid writing tests from perspective of `resource.policy` or `NameOfMyPolicy.new(current_account)`
 
-#### Nil overide
+#### Nil is a user too
 
-once you install gem you may notice that you are able to do
+Once you install gem you may notice that you are able to do
 `nil.dude.can_do_anything? => false` this is a feature not a bug.
 
 Sometimes your application need to deal with `nil` as current_user and
@@ -428,16 +428,17 @@ you don't want to have conditions `if current_user` all over the place.
 That's why gem implements [Null Object Pattern](https://avdi.codes/null-objects-and-falsiness/) on `nil.dude` method that returns `false` all the time
 
 
-#### Implementation outside Rails
+#### Nothing new
 
-the gem/lib is really tiny. Only dependency is Rails itself. If you want
+The gem/lib is really tiny. Only dependency is Rails itself. If you want
 to be vanilla Rails (no external gems) or implement this in other Ruby frameworks (e.g.
 Sinatra) feel free to copy individual files from the `lib` directly
 
-The whole gem is just  [delegator](https://github.com/equivalent/dude_policy/blob/master/lib/dude_policy/dude.rb), [nil extensions](https://github.com/equivalent/dude_policy/blob/master/lib/dude_policy/nil_extension.rb), memoized model methods [1](https://github.com/equivalent/dude_policy/blob/master/lib/dude_policy/has_policy.rb) [2](https://github.com/equivalent/dude_policy/blob/master/lib/dude_policy/is_a_dude.rb) and your [Policy Objects](https://blog.eq8.eu/article/policy-object.html). It's not a rocket science.
+The whole gem is just  [delegator](https://github.com/equivalent/dude_policy/blob/master/lib/dude_policy/dude.rb), [nil extensions](https://github.com/equivalent/dude_policy/blob/master/lib/dude_policy/nil_extension.rb), memoized model methods [1](https://github.com/equivalent/dude_policy/blob/master/lib/dude_policy/has_policy.rb) [2](https://github.com/equivalent/dude_policy/blob/master/lib/dude_policy/is_a_dude.rb) and your [Policy Objects](https://blog.eq8.eu/article/policy-object.html).
 
-**The important part is the philosophy not the gem !** I highly embrace
-the vanilla Rails approach
+`PolicyObject + model method interface == Dude Policy gem`  It's not a rocket science.
+
+**The important part is the philosophy not the gem !**
 
 ## How it works
 
