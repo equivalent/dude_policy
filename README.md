@@ -34,15 +34,15 @@ RSpec.describe 'short demo' do
   let(:different_user)  { User.create }
 
   # you write tests like this:
-  it { expect(author_user.able_to_edit_article?(article)).to be_truthy }
+  it { expect(author_user.dude.able_to_edit_article?(article)).to be_truthy }
 
   # or you can take advantage of native `be_` RSpec matcher that converts any questionmark ending method to matcher
-  it { expect(author_user).to be_able_to_edit_article(article) }
-  it { expect(different_user).not_to be_able_to_edit_article(article) }
-  it { expect(author_user).not_to be_able_to_add_article_review(article) }
-  it { expect(different_user).to be_able_to_add_article_review(article) }
-  it { expect(author_user).not_to be_able_to_delete_review(article) }
-  it { expect(different_user).to be_able_to_add_article_review(article) }
+  it { expect(author_user.dude).to be_able_to_edit_article(article) }
+  it { expect(different_user.dude).not_to be_able_to_edit_article(article) }
+  it { expect(author_user.dude).not_to be_able_to_add_article_review(article) }
+  it { expect(different_user.dude).to be_able_to_add_article_review(article) }
+  it { expect(author_user.dude).not_to be_able_to_delete_review(article) }
+  it { expect(different_user.dude).to be_able_to_add_article_review(article) }
 end
 ```
 
