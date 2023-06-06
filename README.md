@@ -22,6 +22,12 @@ current_user.dude.able_to_add_article_review?(article)
 
 current_user.dude.able_to_delete_review?(review)
 # => false
+
+current_user.policy.able_to_view_articles?
+# => true
+
+current_user.policy.able_to_create_articles?
+# => false
 ```
 
 [RSpec](https://rspec.info/) examples:
@@ -43,6 +49,14 @@ RSpec.describe 'short demo' do
   it { expect(different_user.dude).to be_able_to_add_article_review(article) }
   it { expect(author_user.dude).not_to be_able_to_delete_review(article) }
   it { expect(different_user.dude).to be_able_to_add_article_review(article) }
+  
+  it { expect(author_user.policy).to be_able_to_view_articles? }
+  it { expect(author_user.policy).not_to be_able_to_create_articles? }
+  
+  context "when paid subscription" do 
+    before { author_user.update_attributes(subscription: "paid") }
+    it { expect(author_user.policy).to be_able_to_create_articles? }
+  end
 end
 ```
 
@@ -65,6 +79,18 @@ class ArticlePolicy < DudePolicy::BasePolicy
 
   def article
     resource # delegation defined in DudePolicy::BasePolicy
+  end
+end
+```
+
+```ruby
+# app/policy/user_policy.rb
+class UserPolicy < DudePolicy::BasePolicy
+  def able_to_view_articles?; true; end
+  
+  def able_to_create_articles?
+    return true if resource.subscription == "paid"
+    false
   end
 end
 ```
