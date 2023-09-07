@@ -379,7 +379,7 @@ end
 I've spent many years and tone of time playing around with different Authorization
 solutions and philosophies. All boils down to fact that [Policy Objects](https://blog.eq8.eu/article/policy-object.html) are the best you can implement.
 
-Problem is that though there are  decent policy object solutions usually
+Problem is that although there are  decent policy object solutions usually
 they are not specific enough on implementation strategy  and teams/teammates still create a
 mess.
 
