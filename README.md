@@ -12,7 +12,7 @@ Here are some examples what I mean:
 # rails console
 article = Article.find(123)
 review  = Review.find(123)
-current_user = User.find(432) # e.g. Devise on any authentication solution
+current_user = User.find(432) # e.g. Devise or any other authentication solution
 
 current_user.dude.able_to_edit_article?(article)
 # => true
