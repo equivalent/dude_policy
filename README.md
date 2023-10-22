@@ -447,7 +447,7 @@ resource/controller test on the same interface.
 #### Nil is a user too
 
 Once you install gem you may notice that you are able to do
-`nil.dude.can_do_anything? => false` this is a feature not a bug.
+`nil.dude.can_do_anything? => false`  and `nil.policy.can_do_anything? => false` this is a feature not a bug.
 
 Sometimes your application need to deal with `nil` as current_user and
 you don't want to have conditions `if current_user` all over the place.
